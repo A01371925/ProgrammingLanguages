@@ -10,12 +10,19 @@
 (require '[clojure.math.numeric-tower :refer [sqrt]])
 (require '[clojure.math.numeric-tower :refer [abs]])
 
+
+
+
 (defn !
   "Computes the factorial of n using explicit recursion."
   [n]
   (if (zero? n)
     1
     (*' n (! (dec n)))))
+; n = 9
+; 2! = 2 * 1!
+; 1! = 1 * 0!
+; 0! = 1
 
 (deftest test-!
   (is (= 1
@@ -67,6 +74,8 @@
           a
           (reduce *' (repeat b a)))))))
 
+; a = 1 : b 3
+; (1 1 1)
 
 (deftest test-pow
   (is (= 1 (pow 0 0)))
@@ -108,7 +117,9 @@
   "Surrounds in a list every upper-level element of the list it
    takes as input"
   [lst]
-  (mapcat #(list (list %) ) lst))
+  (mapcat #(list (list %)) lst))
+
+; '(a b c) ((a) (b) (c)))
 
 (deftest test-enlist
   (is (= () (enlist ())))
@@ -121,6 +132,8 @@
    list that only contains the positive numbers of lst"
   [lst]
   (remove #(< % 0) lst))
+
+; (-1 2) (2)
 
 (deftest test-positives
   (is (= () (positives '())))
@@ -143,6 +156,8 @@
    returns a new list with every vector pair inverted."
   [lst]
   (map reverse lst))
+
+; ([a 1][a 2][b 1][b 2]) - > ([1 a][2 a][1 b][2 b])
 
 (deftest test-invert-pairs
   (is (= () (invert-pairs ())))
