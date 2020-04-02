@@ -104,8 +104,8 @@
              #(<= (abs (- %1 %2)) 1)))))
 
 (defn bisection
-  "Takes a, b, and f as arguments. It finds the corresponding root using the bisection method.
-  The algorithm must stop when a value of c is found such that abs(fc) < 1.0E-15"
+  "Write the function bisection, that takes a, b, and f as arguments. It finds the corresponding root using the bisection
+  method. The algorithm must stop when a value of c is found such that:|f(c)| < 1.0 × 10−15."
   [a b f]
   (loop [a  a
          b  b
@@ -139,6 +139,8 @@
               (bisection -10 1 (fn [x] (- (* x x) x 1))))))
 
 (defn deriv
+"The function takes f and h as its arguments, and returns a new function that takes x as argument, and which represents
+the derivative of f given a certain value for h."
   [f
    h]
   (fn
@@ -156,7 +158,7 @@
   (is (aprox= 0.05 6 (dddf 5))))
 
 (defn newton
-  "Returns the corresponding value of Xn."
+  "Takes f and n as its arguments returns the corresponding value of Xn."
   [f n]
   (cond
     (= n 0) 0
