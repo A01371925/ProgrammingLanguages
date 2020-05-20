@@ -9,6 +9,15 @@
 (require '[clojure.test :refer [deftest is run-tests]])
 (require '[clojure.math.numeric-tower :refer [abs]])
 
+(def ^:dinamic n 1)
+(defn alpha
+      ([] (* n 2))
+      ([n] (* n 2)))
+(+ (alpha)
+   (binding [n 2]
+     (+ (alpha) (alpha 4))))
+
+(println n)
 
 (defn aprox=
   "Checks if x is approximately equal to y. Returns true
@@ -184,6 +193,57 @@
                                  (* 0.5 x)))
                       5))))
 
+(defn binary-search
+  "takes three arguments: a vector vct sorted in ascending order and with no repeated
+   elements, a data value x, and a less than function lt-fun. It implements the binary
+   search algorithm, searching for x in vct using the lt-fun to compare x with the
+   elements contained in vct. The lt-fun should accept two arguments, a and b,
+    and return true if a is less than b, or false otherwise."
+  [vct x lt-fun]
+    (loop [start 0
+           end (dec (count vct))]
+      (cond
+        (lt-fun end start) nil
+        (= x (nth vct (quot (+ start end) 2))) (quot (+ start end) 2)
+        (lt-fun x (nth vct (quot (+ start end) 2))) (recur start (dec (quot (+ start end) 2)))
+        ((fn [a b] (lt-fun b a)) x (nth vct (quot (+ start end) 2))) (recur (inc (quot (+ start end) 2)) end))))
 
+(def small-list [4 8 15 16 23 42])
+
+(def big-list [0 2 5 10 11 13 16 20 24 26
+               29 30 31 32 34 37 40 43 44
+               46 50 53 58 59 62 63 66 67
+               70 72 77 79 80 83 85 86 94
+               95 96 99])
+
+(def animals ["dog" "dragon" "horse" "monkey" "ox"
+              "pig" "rabbit" "rat" "rooster" "sheep"
+              "snake" "tiger"])
+(defn str<
+  "Returns true if a is less than b, otherwise
+   returns false. Designed to work with strings."
+  [a b]
+  (< (compare a b) 0))
+
+(deftest test-binary-search
+  (is (nil? (binary-search [] 5 <)))
+  (is (= 3 (binary-search small-list 16 <)))
+  (is (= 0 (binary-search small-list 4 <)))
+  (is (= 5 (binary-search small-list 42 <)))
+  (is (nil? (binary-search small-list 7 <)))
+  (is (nil? (binary-search small-list 2 <)))
+  (is (nil? (binary-search small-list 99 <)))
+  (is (= 17 (binary-search big-list 43 <)))
+  (is (= 0 (binary-search big-list 0 <)))
+  (is (= 39 (binary-search big-list 99 <)))
+  (is (nil? (binary-search big-list 12 <)))
+  (is (nil? (binary-search big-list -1 <)))
+  (is (nil? (binary-search big-list 100 <)))
+  (is (= 5 (binary-search animals "pig" str<)))
+  (is (= 0 (binary-search animals "dog" str<)))
+  (is (= 11 (binary-search animals "tiger" str<)))
+  (is (nil? (binary-search animals "elephant" str<)))
+  (is (nil? (binary-search animals "alligator" str<)))
+  (is (nil? (binary-search animals "unicorn" str<))))
 
 (run-tests)
