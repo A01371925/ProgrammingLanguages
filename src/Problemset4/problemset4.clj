@@ -1,6 +1,6 @@
 ;----------------------------------------------------------
 ; Problem Set #4
-; Date: May 18, 2020.
+; Date: May 22, 2020.
 ; Authors:
 ;          A01378562 Karla Daniela López Vega
 ;          A01371925 Luis Eduardo Díaz Niño de Rivera
@@ -19,6 +19,8 @@
 )
 
 (defmacro do-loop
+  "Write a macro called do-loop that implements a post-test loop control statement.
+  It must combine the functionality of C's do-while statement and Pascal's repeat-until statement."
   [& args]
   (let [type (first (last args))
         expression (second (last args))
@@ -34,6 +36,7 @@
          (if ~expression
            nil
            (recur))))))
+
 
 (defmacro def-pred
   "Write a macro called def-pred,the macro should define two predicate functions: a regular one and its
@@ -61,6 +64,7 @@
                          (rest args))))))))
 
 (defn aux-if
+  "Generates the list of the expressions to return "
   [expressions condition value]
   (let [then (rest (take-while #(not= value %) expressions))
         else (rest (drop-while #(not= value %) expressions))]
@@ -69,7 +73,11 @@
        ~(cons `do else)))
   )
 
-(defmacro IF
+(defmacro
+  "Write a macro called IF (note the uppercase letters). Its purpose is to provide a conditional statement
+  that is syntactically a bit more similar to those found in languages like Pascal or Fortran. It has the
+  following form:\n\n
+                      (IF condition :THEN exp1 exp2 ... :ELSE exp3 exp4 ...)"
   ([condition & args]
    (let [expressions (drop-while #(and (not= :ELSE %) (not= :THEN %)) args)]
      (let [count_else (count (take-while #(not= :ELSE %) expressions))
