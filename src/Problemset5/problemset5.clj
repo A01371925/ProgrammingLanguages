@@ -2,7 +2,10 @@
 (require '[clojure.core.logic :as logic])
 (require '[clojure.core.logic.fd :as fd])
 
+; Problem 1
 (logic/defne removeo
+             " This logic function succeeds if it’s able to remove the first occurrence
+             of x from lst giving result"
              [x lst result]
              ([x [head . tail] tail]
               (logic/== x head))
@@ -10,6 +13,8 @@
               (logic/fresh [temp]
                            (removeo x tail temp)
                            (logic/conso head temp result))))
+
+; ------------------------- Unit test problem 1---------------------------
 (deftest test-removeo
   (is (= [[:b :c :d :e]]
          (logic/run 1 [q]
@@ -46,12 +51,17 @@
               (logic/fresh [temp]
                            (logic/appendo temp [head] result)
                            (reverseo tail temp))))
+
+; Problem 2
 (logic/defne palindromeo
              [lst]
              ([lst]
               (logic/fresh [reversed]
                            (logic/== lst reversed)
                            (reverseo lst reversed))))
+
+
+; ------------------------- Unit test problem 2---------------------------
 (deftest test-palindromeo
   (is (= [:yes]
          (logic/run 1 [q]
@@ -82,10 +92,15 @@
 
  )
 
+; Problem 3
 (logic/defne rotateo
+             "This logic function succeeds when lst is rotated left one position
+             giving result."
              [lst result]
              ([[head . tail] result]
               (logic/appendo tail [head] result)))
+
+; ------------------------- Unit test problem 3---------------------------
 (deftest test-rotateo
   (is (= [:yes]
          (logic/run 1 [q]
@@ -119,7 +134,12 @@
          (logic/run 7 [q1 q2]
                     (rotateo q1 q2)))))
 
+; Problem 4
 (declare evensizeo oddsizeo)
+"These two logic functions should be defined in a mutually recursive fashion.
+That is, each one should be defined in terms of the other one.
+These functions succeed if the number of elements in lst is even or odd,
+respectively."
 (logic/defne evensizeo
              [lst]
              ([[]])
@@ -129,6 +149,8 @@
              [lst]
              ([[head . tail]]
               (evensizeo tail)))
+
+; ------------------------- Unit test problem 4---------------------------
 (deftest test-evensizeo-oddsizeo
   (is (= [:yes]
          (logic/run 1 [q]
@@ -169,7 +191,12 @@
          (logic/run 5 [q]
                     (oddsizeo q)))))
 
+
+; Problem 5
 (declare splito splito-b)
+"This logic function succeeds when splitting lst gives a and b.
+The first, third, fifth, etc. elements of lst go to a, while the
+second, fourth, sixth, etc. elements go to b. "
 (logic/defne splito
              [lst a b]
              ([[] [] []])
@@ -184,6 +211,9 @@
               (logic/fresh [temp_b]
                            (splito tail a temp_b)
                            (logic/conso head temp_b b))))
+
+
+; ------------------------- Unit test problem 5---------------------------
 (deftest test-splito
   (is (= [:yes]
          (logic/run 1 [q]
@@ -225,7 +255,11 @@
          (logic/run 7 [q1 q2 q3]
                     (splito q1 q2 q3)))))
 
+; Problem 6
 (logic/defne equalo
+             "This logic function succeeds if all the elements contained in lst unify
+             to the same value, otherwise fails. The function should always succeed if
+             lst is empty or has only one element."
              [lst]
              ([[]])
              ([[x]])
@@ -234,6 +268,9 @@
                            (logic/firsto tail f_tail)
                            (logic/== head f_tail)
                            (equalo tail))))
+
+
+; ------------------------- Unit test problem 6---------------------------
 (deftest test-equalo
   (is (= [:yes]
          (logic/run 1 [q]
@@ -278,13 +315,20 @@
          (logic/run 7 [q]
                     (equalo q)))))
 
+
+; Problem 7
 (logic/defne counto
+             "This logic function unifies result with the number of elements
+             contained in lst. "
              [lst result]
              ([[] 0])
              ([[head . tail] result]
               (logic/fresh [temp]
                            (counto tail temp)
                            (fd/+ temp 1 result))))
+
+
+; ------------------------- Unit test problem 6---------------------------
 (deftest test-counto
   (is (= [0]
          (logic/run 1 [q]
@@ -325,7 +369,10 @@
                     (fd/in q1 q2 (fd/interval 0 10))
                     (counto q1 q2)))))
 
+
+; Problem 8
 (logic/defne facto
+             "This logic function succeeds if the factorial of n is equal to result."
              [n result]
              ([0 1])
              ([n result]
@@ -333,6 +380,9 @@
                            (fd/- n 1 n_1)
                            (facto n_1 factorial)
                            (fd/* n factorial result))))
+
+
+; ------------------------- Unit test problem 8---------------------------
 (deftest test-facto
   (is (= [1]
          (logic/run 1 [q]
@@ -376,7 +426,10 @@
          (logic/run 10 [n r]
                     (facto n r)))))
 
+
+; Problem 9
 (logic/defne powo
+             "This logic function succeeds if base raised to the power exp is equal to result."
              [base exp result]
              ([base 0 1])
              ([base exp result]
@@ -386,6 +439,9 @@
                            (fd/- exp 1 new_exp)
                            (powo base new_exp temp)
                            (fd/* base temp result))))
+
+
+; ------------------------- Unit test problem 9---------------------------
 (deftest test-powo
   (is (= [:yes]
          (logic/run 1 [q]
@@ -416,7 +472,11 @@
                        (fd/in q (fd/interval 0 100))
                        (powo q 1 q))))))
 
+
+; Problem 10
 (logic/defne rangeo
+             "This logic function unifies result with a sequence of incremental integers
+             from start to end (inclusive)"
              [start end result]
              ([start start [start]])
              ([start end result]
@@ -428,6 +488,9 @@
                            (fd/- end 1 end_temp)
                            (rangeo start end_temp temp)
                            (logic/appendo temp [end] result))))
+
+
+; ------------------------- Unit test problem 10---------------------------
 (deftest test-rangeo
   (is (= [[3 4 5 6 7 8 9 10]]
          (logic/run 1 [q]

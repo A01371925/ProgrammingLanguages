@@ -73,7 +73,7 @@
        ~(cons `do else)))
   )
 
-(defmacro
+(defmacro IF
   "Write a macro called IF (note the uppercase letters). Its purpose is to provide a conditional statement
   that is syntactically a bit more similar to those found in languages like Pascal or Fortran. It has the
   following form:\n\n
